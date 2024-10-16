@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/utils/colors.dart';
 import 'package:flutter_application_2/utils/constants.dart';
+import 'package:flutter_application_2/views/call_log.dart';
+import 'package:get/get.dart';
 
 class AppBarWidget extends StatelessWidget {
   const AppBarWidget({
@@ -20,33 +23,33 @@ class AppBarWidget extends StatelessWidget {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 7,
+              color: AppColor.lightGrey .withOpacity(0.5),
+              spreadRadius: 0.5,
+              blurRadius: 2,
               offset: const Offset(0, 3),
             ),
           ],
         ),
-        child: const SizedBox(
-          height: 150,
+        child:  SizedBox(
+          height: 120,
           child: Padding(
-            padding: EdgeInsets.all(18),
+            padding: const EdgeInsets.all(18),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   '5 Stories > > >',
                   style: TextStyle(fontSize: 25),
                 ),
                 Constants.kWidth20,
-                Icon(Icons.search),
+                const Icon(Icons.search),
                 Constants.kWidth5,
-                Icon(Icons.call),
+                IconButton(icon: const Icon( Icons.call),onPressed: ()=>Get.to(const CallLog()),),
                 Constants.kWidth5,
-                Icon(Icons.star),
+                const Icon(Icons.star),
                 Constants.kWidth5,
-                Icon(Icons.notifications),
+                const Icon(Icons.notifications),
               ],
             ),
           ),
