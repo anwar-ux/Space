@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/utils/colors.dart';
 import 'package:flutter_application_2/utils/constants.dart';
+import 'package:flutter_application_2/views/camo/camara_screen.dart';
 import 'package:flutter_application_2/views/chat_screen.dart';
 import 'package:flutter_application_2/widgets/floating_action_button.dart';
 import 'package:get/get.dart';
@@ -11,15 +12,11 @@ class AllChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:AppColor.white,
       body: Padding(
         padding: const EdgeInsets.only(left: 18, right: 18),
         child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            mainAxisExtent: 110
-          ),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, mainAxisSpacing: 8, crossAxisSpacing: 8, mainAxisExtent: 110),
           itemCount: 8,
           itemBuilder: (context, index) {
             return GestureDetector(
@@ -32,8 +29,7 @@ class AllChatScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                        color: AppColor.seconderyColor),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppColor.seconderyColor),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -66,7 +62,9 @@ class AllChatScreen extends StatelessWidget {
       floatingActionButton: ExpandableFab(distance: 80, children: [
         TextButton(onPressed: () {}, child: const Text('New Chat')),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(CameraScreen());
+          },
           child: const Text('Create Story'),
         )
       ]),

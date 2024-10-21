@@ -1,7 +1,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Camo/Utils/text.dart';
+import 'package:flutter_application_2/widgets/camo/text.dart';
 
 List<DropdownMenuItem<dynamic>>? items = [
   const DropdownMenuItem(child: Icon(Icons.camera)),

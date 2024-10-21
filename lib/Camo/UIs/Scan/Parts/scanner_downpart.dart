@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Camo/Utils/images.dart';
-import 'package:flutter_application_2/Camo/Utils/text.dart';
+import 'package:flutter_application_2/utils/images.dart';
+import 'package:flutter_application_2/widgets/camo/text.dart';
 
 class Scanner_DownPart extends StatefulWidget {
   const Scanner_DownPart({super.key});

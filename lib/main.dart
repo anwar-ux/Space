@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Camo/UIs/Scan/camara_screen.dart';
-
+import 'package:flutter_application_2/views/home_screen.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Camara_Screen(),
+      home: HomeScreen(),
     );
   }
 }

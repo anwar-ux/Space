@@ -96,7 +96,7 @@ class CallLog extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 18, right: 18, top: 20),
                       child: TabBar(
-                        labelPadding: EdgeInsets.only(left:5,right: 5),
+                        labelPadding: const EdgeInsets.only(left:5,right: 5),
                         indicatorPadding: const EdgeInsets.all(1.5),
                         labelColor: Colors.white,
                         indicator: BoxDecoration(
@@ -113,8 +113,8 @@ class CallLog extends StatelessWidget {
                         dividerColor: Colors.transparent,
                       ),
                     ),
-                    Expanded(
-                      child: const TabBarView(
+                    const Expanded(
+                      child:  TabBarView(
                         children: [
                           AllCallPage(),
                           Center(child: Text('Star Screen Content')),
