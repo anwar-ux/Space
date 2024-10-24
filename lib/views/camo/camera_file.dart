@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_application_2/controllers/camo/camera_preview_controller.dart';
 import 'package:flutter_application_2/utils/images.dart';
+import 'package:flutter_application_2/views/camo/camara_screen.dart';
 import 'package:flutter_application_2/widgets/camo/text.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -146,7 +147,7 @@ class CameraPreviewScreen extends StatelessWidget {
               left: 15,
               child: GestureDetector(
                 onTap: () {
-                  Get.back(); // Navigate back
+                  Get.off(CameraScreen()); // Navigate back
                 },
                 child: Container(
                   height: 40,

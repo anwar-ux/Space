@@ -2,7 +2,7 @@ name: flutter_application_2
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ">=3.4.3 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,12 +28,15 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  audio_waveforms: ^1.1.0
+  audioplayers: ^6.1.0
   camera: ^0.10.5+5
   cupertino_icons: ^1.0.6
   flutter:
     sdk: flutter
+  flutter_audio_waveforms: ^1.2.1+8
   get: ^4.6.6
-  google_fonts: ^6.2.1
+  google_fonts: ^4.0.4
   google_mlkit_face_detection: ^0.11.0
   image_gallery_saver: ^2.0.1
   image_picker: ^1.1.2
@@ -41,6 +44,8 @@ dependencies:
   path_provider: ^2.1.1
   permission_handler: ^11.3.1
   photo_manager: ^3.5.1
+  link_preview_generator: ^1.2.0
+  syncfusion_flutter_pdfviewer: ^21.2.10
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -51,7 +56,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -1,63 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/controllers/chat/main_chat_screen.dart';
 import 'package:flutter_application_2/utils/colors.dart';
 import 'package:flutter_application_2/views/all_chat_screen.dart';
 import 'package:flutter_application_2/widgets/app_bar_widget.dart';
 import 'package:flutter_application_2/widgets/status_bar_widget.dart';
+import 'package:get/get.dart';
+import 'package:link_preview_generator/link_preview_generator.dart'; // Import GetX package
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  final HomeController homeController = Get.put(HomeController());
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  bool _showHorizontalList = false;
-  double _dragOffset = 0.0;
-  final double _dragThreshold = 100.0; // Minimum drag distance to trigger hiding app bar
-
-  void _onVerticalDragUpdate(DragUpdateDetails details) {
-    setState(() {
-      _dragOffset += details.delta.dy;
-    });
-
-    // Show list when dragging down
-    if (_dragOffset > _dragThreshold) {
-      setState(() {
-        _showHorizontalList = true;
-      });
-      _resetDrag();
-    }
-
-    // Hide list when dragging up
-    if (_dragOffset < -_dragThreshold) {
-      setState(() {
-        _showHorizontalList = false;
-      });
-      _resetDrag();
-    }
-  }
-
-  void _resetDrag() {
-    setState(() {
-      _dragOffset = 0.0;
-    });
-  }
+   HomeScreen({super.key}); 
+ 
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
-        backgroundColor:AppColor.white,
+        backgroundColor: AppColor.white,
         body: GestureDetector(
-          onVerticalDragUpdate: _onVerticalDragUpdate,
-          onVerticalDragEnd: (_) => _resetDrag(),
+          onVerticalDragUpdate: (details) {
+            if (details.delta.dy > 0) {
+              homeController.show(); // Show list when dragging down
+            } else {
+              homeController.hide(); // Hide list when dragging up
+            }
+          },
           child: Column(
             children: [
-              _showHorizontalList
-                  ? StatusBarWidget(showHorizontalList: _showHorizontalList)
-                  : const AppBarWidget(),
+              Obx(() => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: homeController.showHorizontalList.value ? 180 : 0, // Change height based on visibility
+                curve: Curves.easeInOut,
+                child: homeController.showHorizontalList.value
+                    ? const StatusBarWidget(showHorizontalList: true)
+                    : const SizedBox.shrink(), // Placeholder when not visible
+              )),
+              // AppBar when horizontal list is not shown
+              Obx(() => homeController.showHorizontalList.value ? Container() : const AppBarWidget()),
 
               // Apply border radius to the entire body (TabBar & TabBarView)
               Expanded(
@@ -90,20 +71,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           dividerColor: Colors.transparent,
                         ),
                       ),
-                      Expanded(
-                        child: GestureDetector(
-                          onVerticalDragUpdate: _onVerticalDragUpdate,
-                          onVerticalDragEnd: (_) => _resetDrag(),
-                          child: const TabBarView(
-                            children: [
-                              AllChatScreen(),
-                              Center(child: Text('Call Screen Content')),
-                              Center(child: Text('Star Screen Content')),
-                              Center(child: Text('Notification Screen Content')),
-                              Center(child: Text('Message Screen Content')),
-                              Center(child: Text('Profile Screen Content')),
-                            ],
-                          ),
+                      const Expanded(
+                        child: TabBarView(
+                          children: [
+                            AllChatScreen(),
+                            Center(child: Text('Call Screen Content')),
+                            Center(child: Text('Star Screen Content')),
+                            Center(child: Text('Notification Screen Content')),
+                            Center(child: Text('Message Screen Content')),
+                            Center(child: Text('Profile Screen Content')),
+                          ],
                         ),
                       ),
                     ],

@@ -1,7 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/controllers/chat/chat_controller.dart';
 import 'package:flutter_application_2/model/chat_model.dart';
 import 'package:flutter_application_2/utils/colors.dart';
 import 'package:flutter_application_2/utils/constants.dart';
+import 'package:flutter_application_2/widgets/chat/audio_player.dart';
+import 'package:flutter_application_2/widgets/chat/custom_buttons.dart';
+import 'package:flutter_application_2/widgets/chat/full_link_widget.dart';
+import 'package:flutter_application_2/widgets/chat/media_widget.dart';
+import 'package:flutter_application_2/widgets/chat/message_textfiled.dart';
+import 'package:flutter_application_2/widgets/chat/missed_call_widget.dart';
+import 'package:flutter_application_2/widgets/chat/pdf_widget.dart';
 import 'package:get/get.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -9,6 +19,8 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ChatController chatController = Get.put(ChatController()); // Instantiate the controller
+
     return Scaffold(
       backgroundColor: AppColor.white,
       appBar: PreferredSize(
@@ -70,222 +82,125 @@ class ChatScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-  child: ListView.builder(
-    itemCount: dummyData.length,
-    itemBuilder: (context, index) {
-      final message = dummyData[index];
+            child: ListView.builder(
+              itemCount: dummyData.length,
+              itemBuilder: (context, index) {
+                final message = dummyData[index];
 
-      switch (message.type) {
-        case MessageType.fullLink:
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Align(
-              alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
-              child: FullLink(
-                isMe: message.isMe,
-               
-              ),
+                switch (message.type) {
+                  case MessageType.fullLink:
+                    return FullLink(isMe: message.isMe, url: message.imageUrl!);
+
+                  case MessageType.missedCall:
+                    return MissedVoiceCall(isMe: message.isMe);
+
+                  case MessageType.audio:
+                    return ChatAudioPlayer(isMe: message.isMe, audioUrl: message.audioUrl!);
+                  case MessageType.media:
+                    return MediaWidget(isMe: message.isMe, widgetIndex: 0);
+                  case MessageType.pdf:
+                    return PdfWidget(
+                      isMe: message.isMe,
+                      pdfFile: File(message.pdfPath!),
+                    );
+                  case MessageType.text:
+                  default:
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: Align(
+                        alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: message.isMe ? AppColor.chatSend : AppColor.chatRecive,
+                            borderRadius: message.isMe
+                                ? const BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    topRight: Radius.circular(8),
+                                    bottomLeft: Radius.circular(8),
+                                  )
+                                : const BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    topRight: Radius.circular(8),
+                                    bottomRight: Radius.circular(8),
+                                  ),
+                          ),
+                          child: Text(
+                            message.content,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                }
+              },
             ),
-          );
-
-        case MessageType.missedCall:
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Align(
-              alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
-              child: MissedVoiceCall(
-                isMe: message.isMe,
-               
-              ),
-            ),
-          );
-
-        case MessageType.text:
-        default:
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: Align(
-              alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: message.isMe ? AppColor.chatSend : AppColor.chatRecive,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  message.content,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    letterSpacing: 1,
-                  ),
-                ),
-              ),
-            ),
-          );
-      }
-    },
-  ),
-),
-
+          ),
+          // TextField Section
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CustomButton(
-                  icon: Icons.add,
-                  color: Colors.grey,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Container(
-                      height: 50, // Fixed height for the TextField
-                      child: TextField(
-                        textAlign: TextAlign.left,
-                        decoration: InputDecoration(
-                          hintText: 'message',
-                          filled: true,
-                          fillColor: const Color(0xFFEBEBEB),
-                          contentPadding: const EdgeInsets.all(10),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Color(0xFFEBEBEB)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Color(0xFFEBEBEB)),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Color(0xFFEBEBEB)),
-                          ),
-                        ),
-                      ),
+                GestureDetector(
+                  onTap: chatController.toggleBottomSheet, // Use the controller method
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEBEBEB),
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    child: Obx(() => Icon(
+                          // Make the Icon reactive
+                          chatController.isBottomSheetVisible.value ? Icons.close : Icons.add,
+                          color: Colors.grey,
+                          size: 30,
+                        )),
                   ),
                 ),
+                const SizedBox(width: 8), // Add spacing between the button and the text field
+                const Expanded(child: MessageTextFiled()), // Use Expanded to take available space
                 CustomButton(
                   icon: Icons.send,
                   color: Colors.grey,
                 ),
               ],
             ),
-          )
+          ),
+
+          // Bottom Sheet Toggle Section
+          Obx(() => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: chatController.isBottomSheetVisible.value ? 200 : 0, // Change height based on visibility
+                curve: Curves.easeInOut,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColor.seconderyColor,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                  ),
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5,
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 1,
+                    ),
+                    itemCount: buildButtons(context).length,
+                    itemBuilder: (context, index) {
+                      return buildButtons(context)[index];
+                    },
+                  ),
+                ),
+              )),
         ],
       ),
     );
   }
 }
-
-class CustomButton extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-
-  CustomButton({super.key, required this.icon, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEBEBEB),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 22,
-      ),
-    );
-  }
-}
-
-class MissedVoiceCall extends StatelessWidget {
-  final bool isMe;
-  MissedVoiceCall({super.key, required this.isMe});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: isMe ? AppColor.chatSend : AppColor.chatRecive,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(color: AppColor.seconderyColor, borderRadius: BorderRadius.circular(5)),
-            ),
-            Constants.kWidth10,
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Missed voice call',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text('Tap to call back')
-              ],
-            )
-          ],
-        ));
-  }
-}
-
-class FullLink extends StatelessWidget {
-  final bool isMe;
-  FullLink({super.key, required this.isMe});
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.7, // 70% of the screen width
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isMe ? AppColor.chatSend : AppColor.chatRecive,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 150,
-              decoration: BoxDecoration(
-                color: AppColor.seconderyColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: isMe ? AppColor.chatSend : AppColor.chatRecive,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Corperation X - Webflow Ecommerce',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text('website template'),
-                  Text('corperationtemplate.webflow.io')
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
